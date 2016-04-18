@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Models\User;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -40,6 +40,23 @@ class AuthController extends Controller
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
     }
 
+    public function ajaxLogin(Request $request)
+    {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], true, true)) {
+            return [
+                'success' => true,
+                'data' => [ 'user' => Auth::user() ],
+                'check' => Auth::check(),
+                'error' => null
+            ];
+        }
+        return [
+            'success' => false,
+            'data' => null,
+            'error' => null
+        ];
+    }
+    
     /**
      * Get a validator for an incoming registration request.
      *
@@ -51,7 +68,7 @@ class AuthController extends Controller
         return Validator::make($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'password' => 'required|min:6',
         ]);
     }
 

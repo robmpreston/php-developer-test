@@ -11,6 +11,21 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['middleware' => ['web', 'auth']], function() {
+    Route::get('/api/context', 'ContextController@get');
+
+    Route::get('/api/people', 'PeopleController@all');
+    Route::post('/api/people/add', 'PeopleController@add');
+    Route::get('/api/people/{id}', 'PeopleController@get');
+});
+
+Route::group(['middleware' => 'web'], function() {
+    Route::auth();
+
+    Route::post('/api/login', 'AuthController@ajaxLogin');
+    Route::post('/api/register', 'AuthController@ajaxRegister');
+
+    Route::get('/{vue_capture?}', function () {
+        return view('index');
+    })->where('vue_capture', '[\/\w\.-]*');
 });

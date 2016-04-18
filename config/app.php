@@ -156,6 +156,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * 3rd Party Service Provider
+         */
+        Maknz\Slack\SlackServiceProvider::class
     ],
 
     /*
@@ -201,7 +205,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        'Slack' => Maknz\Slack\SlackServiceProvider::class,
     ],
 
 ];
