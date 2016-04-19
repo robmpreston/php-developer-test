@@ -8,7 +8,8 @@
             <ul class="nav navbar-nav">
                 <li v-show="!context.loggedIn" v-link="{ path: '/signup' }"><a>Signup</a></li>
                 <li v-show="!context.loggedIn" v-link="{ path: '/login' }"><a>Login</a></li>
-                <li v-show="context.loggedIn" v-link="{ path: '/logout' }"><a>Logout</a></li>
+                <li v-show="context.loggedIn" v-link="{ path: '/people' }"><a>People</a></li>
+                <li v-show="context.loggedIn" @click="logout"><a>Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -26,13 +27,28 @@ export default {
         }
     },
     created () {
-        var self = this;
-        this.$http.get('/api/context').then(function (response) {
-            self.context = response.data;
-        });
+        this.getContext();
     },
     methods: {
-
+        getContext() {
+            var self = this;
+            this.$http.get('/api/context').then(function (response) {
+                self.context = response.data
+            })
+        },
+        logout() {
+            this.$http.get('/api/logout')
+                .then(function(response) {
+                    this.getContext();
+                    this.$route.router.go({ path: '/' });
+                })
+        }
+    },
+    events: {
+        'logged-in': function () {
+            this.getContext();
+            this.$route.router.go({ path: '/people' });
+        }
     }
 }
 </script>

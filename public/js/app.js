@@ -14648,7 +14648,7 @@ router.start(_App2.default, '#app');
 
 _vue2.default.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#_token').getAttribute('value');
 
-},{"./vue/components/App.vue":31,"./vue/components/Home.vue":32,"./vue/components/Login.vue":33,"./vue/components/People.vue":34,"./vue/components/Signup.vue":35,"vue":28,"vue-resource":16,"vue-router":27}],31:[function(require,module,exports){
+},{"./vue/components/App.vue":31,"./vue/components/Home.vue":32,"./vue/components/Login.vue":33,"./vue/components/People.vue":34,"./vue/components/Signup.vue":36,"vue":28,"vue-resource":16,"vue-router":27}],31:[function(require,module,exports){
 var __vueify_style__ = require("vueify-insert-css").insert("/* line 4, stdin */\n.navbar .nav li {\n  cursor: pointer; }\n")
 'use strict';
 
@@ -14662,21 +14662,37 @@ exports.default = {
         };
     },
     created: function created() {
-        var self = this;
-        this.$http.get('/api/context').then(function (response) {
-            self.context = response.data;
-        });
+        this.getContext();
     },
 
-    methods: {}
+    methods: {
+        getContext: function getContext() {
+            var self = this;
+            this.$http.get('/api/context').then(function (response) {
+                self.context = response.data;
+            });
+        },
+        logout: function logout() {
+            this.$http.get('/api/logout').then(function (response) {
+                this.getContext();
+                this.$route.router.go({ path: '/' });
+            });
+        }
+    },
+    events: {
+        'logged-in': function loggedIn() {
+            this.getContext();
+            this.$route.router.go({ path: '/people' });
+        }
+    }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n    <nav class=\"navbar navbar-default\">\n        <div class=\"container\">\n            <div class=\"navbar-header\">\n                <a class=\"navbar-brand\" v-link=\"{ path: '/' }\">FamilyTree</a>\n            </div>\n            <ul class=\"nav navbar-nav\">\n                <li v-show=\"!context.loggedIn\" v-link=\"{ path: '/signup' }\"><a>Signup</a></li>\n                <li v-show=\"!context.loggedIn\" v-link=\"{ path: '/login' }\"><a>Login</a></li>\n                <li v-show=\"context.loggedIn\" v-link=\"{ path: '/logout' }\"><a>Logout</a></li>\n            </ul>\n        </div>\n    </nav>\n    <div class=\"container\">\n        <router-view></router-view>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n    <nav class=\"navbar navbar-default\">\n        <div class=\"container\">\n            <div class=\"navbar-header\">\n                <a class=\"navbar-brand\" v-link=\"{ path: '/' }\">FamilyTree</a>\n            </div>\n            <ul class=\"nav navbar-nav\">\n                <li v-show=\"!context.loggedIn\" v-link=\"{ path: '/signup' }\"><a>Signup</a></li>\n                <li v-show=\"!context.loggedIn\" v-link=\"{ path: '/login' }\"><a>Login</a></li>\n                <li v-show=\"context.loggedIn\" v-link=\"{ path: '/people' }\"><a>People</a></li>\n                <li v-show=\"context.loggedIn\" @click=\"logout\"><a>Logout</a></li>\n            </ul>\n        </div>\n    </nav>\n    <div class=\"container\">\n        <router-view></router-view>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "/home/vagrant/Code/php-developer-test/resources/assets/js/vue/components/App.vue"
+  var id = "/home/owner/Documents/source/php-developer-test/resources/assets/js/vue/components/App.vue"
   module.hot.dispose(function () {
     require("vueify-insert-css").cache["/* line 4, stdin */\n.navbar .nav li {\n  cursor: pointer; }\n"] = false
     document.head.removeChild(__vueify_style__)
@@ -14700,7 +14716,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "/home/vagrant/Code/php-developer-test/resources/assets/js/vue/components/Home.vue"
+  var id = "/home/owner/Documents/source/php-developer-test/resources/assets/js/vue/components/Home.vue"
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {
@@ -14725,7 +14741,18 @@ exports.default = {
 
     methods: {
         login: function login() {
-            this.$http.post('/login', this.loginForm).then(function (response) {});
+            if (this.validated) {
+                this.$http.post('/api/login', this.loginForm).then(function (response) {
+                    if (response.data.success == true) {
+                        this.$dispatch('logged-in');
+                    }
+                });
+            }
+        }
+    },
+    computed: {
+        validated: function validated() {
+            return this.loginForm.email != '' && this.loginForm.password != '';
         }
     }
 };
@@ -14735,7 +14762,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "/home/vagrant/Code/php-developer-test/resources/assets/js/vue/components/Login.vue"
+  var id = "/home/owner/Documents/source/php-developer-test/resources/assets/js/vue/components/Login.vue"
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {
@@ -14748,17 +14775,26 @@ if (module.hot) {(function () {  module.hot.accept()
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _AddModal = require('./People/AddModal.vue');
+
+var _AddModal2 = _interopRequireDefault(_AddModal);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//import EditModal from './People/EditModal.vue'
+
 exports.default = {
+    components: {
+        'add-modal': _AddModal2.default
+    },
+    //    'edit-modal': EditModal
     data: function data() {
         return {
-            addForm: {
-                first_name: '',
-                last_name: '',
-                mother_id: '0',
-                father_id: '0',
-                spouse_id: '0'
-            },
-            people: {}
+            people: {},
+            showAdd: false,
+            showEdit: true,
+            editData: {}
         };
     },
     created: function created() {
@@ -14766,33 +14802,95 @@ exports.default = {
     },
 
     methods: {
-        add: function add() {
-            var self = this;
-            this.$http.post('/api/people/add', this.addForm).then(function (response) {
-                self.update();
-            });
-        },
         update: function update() {
             this.$http.get('/api/people').then(function (response) {
                 this.people = response.data;
             });
+        },
+        add: function add() {
+            this.showAdd = true;
+        },
+        edit: function edit(person) {
+            this.editData = person;
+            this.showEdit = true;
+        }
+    },
+    events: {
+        'update-people': function updatePeople() {
+            this.update();
         }
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"row\">\n    <div class=\"col-md-4 col-md-offset-4\">\n        <div class=\"form-group\">\n            <input class=\"form-control\" type=\"text\" placeholder=\"First name\" v-model=\"addForm.first_name\">\n        </div>\n        <div class=\"form-group\">\n            <input class=\"form-control\" type=\"text\" placeholder=\"Last name\" v-model=\"addForm.last_name\">\n        </div>\n\n        <div class=\"form-group\">\n            <select class=\"form-control\" v-model=\"addForm.mother_id\">\n                <option value=\"0\">Select Mother</option>\n                <option v-for=\"person in people\" :value=\"person.id\">\n                    {{ person.first_name }} {{ person.last_name }}\n                </option>\n            </select>\n        </div>\n        <div class=\"form-group\">\n            <select class=\"form-control\" v-model=\"addForm.father_id\">\n                <option value=\"0\">Select Father</option>\n                <option v-for=\"person in people\" :value=\"person.id\">\n                    {{ person.first_name }} {{ person.last_name }}\n                </option>\n            </select>\n        </div>\n        <div class=\"form-group\">\n            <select class=\"form-control\" v-model=\"addForm.spouse_id\">\n                <option value=\"0\">Select Spouse</option>\n                <option v-for=\"person in people\" :value=\"person.id\">\n                    {{ person.first_name }} {{ person.last_name }}\n                </option>\n            </select>\n        </div>\n        <div class=\"form-group\">\n            <button class=\"btn btn-primary\" @click=\"add\">Add</button>\n        </div>\n    </div>\n</div>\n<div class=\"row\">\n    <div class=\"col-md-12\">\n        <p v-for=\"person in people\">{{ person.first_name }} {{ person.last_name }}</p>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<add-modal :show=\"showAdd\"></add-modal>\n<div class=\"row\">\n    <div class=\"col-md-12\">\n        <button @click=\"add\" class=\"btn btn-primary\">Add Person</button>\n    </div>\n</div>\n<div class=\"row\">\n    <div class=\"col-md-12\">\n        <table class=\"table\">\n            <tbody><tr>\n                <th>Person</th>\n                <th>Actions</th>\n            </tr>\n            <tr v-for=\"person in people\">\n                <td>{{ person.first_name }}{{ person.last_name }}</td>\n                <td>\n                    <a @click=\"edit(person)\">Edit</a>\n                    <a @click=\"view(person)\">View</a>\n                </td>\n            </tr>\n        </tbody></table>\n        <p v-for=\"person in people\">{{ person.first_name }} {{ person.last_name }}</p>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "/home/vagrant/Code/php-developer-test/resources/assets/js/vue/components/People.vue"
+  var id = "/home/owner/Documents/source/php-developer-test/resources/assets/js/vue/components/People.vue"
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":2}],35:[function(require,module,exports){
+},{"./People/AddModal.vue":35,"vue":28,"vue-hot-reload-api":2}],35:[function(require,module,exports){
+'use strict';
+
+var _Modal = require('../shared/Modal.vue');
+
+var _Modal2 = _interopRequireDefault(_Modal);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = {
+    components: {
+        'modal': _Modal2.default
+    },
+    props: ['show'],
+    data: function data() {
+        return {
+            title: '',
+            body: '',
+            addForm: {
+                first_name: '',
+                last_name: '',
+                mother_id: '0',
+                father_id: '0',
+                spouse_id: '0'
+            }
+        };
+    },
+
+    methods: {
+        close: function close() {
+            this.show = false;
+            this.title = '';
+            this.body = '';
+        },
+        add: function add() {
+            var self = this;
+            this.$http.post('/api/people/add', this.addForm).then(function (response) {
+                self.update();
+                this.$dispatch('update-people');
+            });
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<modal :show.sync=\"show\" :on-close=\"close\">\n    <div class=\"modal-header\">\n        <h1>Add New Person</h1>\n        <div class=\"close-modal flex-right\">X</div>\n    </div>\n\n    <div class=\"modal-body\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <div class=\"form-group\">\n                    <input class=\"form-control\" type=\"text\" placeholder=\"First name\" v-model=\"addForm.first_name\">\n                </div>\n                <div class=\"form-group\">\n                    <input class=\"form-control\" type=\"text\" placeholder=\"Last name\" v-model=\"addForm.last_name\">\n                </div>\n\n                <div class=\"form-group\">\n                    <select class=\"form-control\" v-model=\"addForm.mother_id\">\n                        <option value=\"0\">Select Mother</option>\n                        <option v-for=\"person in people\" :value=\"person.id\">\n                            {{ person.first_name }} {{ person.last_name }}\n                        </option>\n                    </select>\n                </div>\n                <div class=\"form-group\">\n                    <select class=\"form-control\" v-model=\"addForm.father_id\">\n                        <option value=\"0\">Select Father</option>\n                        <option v-for=\"person in people\" :value=\"person.id\">\n                            {{ person.first_name }} {{ person.last_name }}\n                        </option>\n                    </select>\n                </div>\n                <div class=\"form-group\">\n                    <select class=\"form-control\" v-model=\"addForm.spouse_id\">\n                        <option value=\"0\">Select Spouse</option>\n                        <option v-for=\"person in people\" :value=\"person.id\">\n                            {{ person.first_name }} {{ person.last_name }}\n                        </option>\n                    </select>\n                </div>\n                <div class=\"form-group\">\n                    <button class=\"btn btn-primary\" @click=\"add\">Add</button>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"modal-footer text-right\">\n        <button class=\"btn btn-primary\">Add</button>\n    </div>\n</modal>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  var id = "/home/owner/Documents/source/php-developer-test/resources/assets/js/vue/components/People/AddModal.vue"
+  if (!module.hot.data) {
+    hotAPI.createRecord(id, module.exports)
+  } else {
+    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"../shared/Modal.vue":37,"vue":28,"vue-hot-reload-api":2}],36:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14811,7 +14909,18 @@ exports.default = {
 
     methods: {
         signup: function signup() {
-            this.$http.post('/register', this.signupForm).then(function (response) {});
+            if (this.validated) {
+                this.$http.post('/api/register', this.signupForm).then(function (response) {
+                    if (response.data.success == true) {
+                        this.$dispatch('logged-in');
+                    }
+                });
+            }
+        }
+    },
+    computed: {
+        validated: function validated() {
+            return this.signupForm.name != '' && this.signupForm.email != '' && this.signupForm.password != '';
         }
     }
 };
@@ -14821,7 +14930,38 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "/home/vagrant/Code/php-developer-test/resources/assets/js/vue/components/Signup.vue"
+  var id = "/home/owner/Documents/source/php-developer-test/resources/assets/js/vue/components/Signup.vue"
+  if (!module.hot.data) {
+    hotAPI.createRecord(id, module.exports)
+  } else {
+    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":28,"vue-hot-reload-api":2}],37:[function(require,module,exports){
+'use strict';
+
+module.exports = {
+    props: ['show', 'onClose'],
+    methods: {
+        close: function close() {
+            this.onClose();
+        }
+    },
+    ready: function ready() {
+        document.addEventListener("keydown", function (e) {
+            if (this.show && e.keyCode == 27) {
+                this.onClose();
+            }
+        });
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"modal-mask\" @click=\"close\" v-show=\"show\" transition=\"modal\">\n    <div class=\"modal-container\" @click.stop=\"\">\n        <slot></slot>\n    </div>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  var id = "/home/owner/Documents/source/php-developer-test/resources/assets/js/vue/components/shared/Modal.vue"
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {

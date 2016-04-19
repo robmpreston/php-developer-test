@@ -12,18 +12,24 @@
 */
 
 Route::group(['middleware' => ['web', 'auth']], function() {
-    Route::get('/api/context', 'ContextController@get');
 
     Route::get('/api/people', 'PeopleController@all');
     Route::post('/api/people/add', 'PeopleController@add');
     Route::get('/api/people/{id}', 'PeopleController@get');
+
+    Route::get('/api/logout', function() {
+        Auth::logout();
+
+        return response()->json([ 'success' => true ]);
+    });
 });
 
 Route::group(['middleware' => 'web'], function() {
     Route::auth();
 
-    Route::post('/api/login', 'AuthController@ajaxLogin');
-    Route::post('/api/register', 'AuthController@ajaxRegister');
+    Route::get('/api/context', 'ContextController@get');
+    Route::post('/api/login', 'Auth\AuthController@ajaxLogin');
+    Route::post('/api/register', 'Auth\AuthController@ajaxRegister');
 
     Route::get('/{vue_capture?}', function () {
         return view('index');

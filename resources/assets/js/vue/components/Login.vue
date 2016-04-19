@@ -29,10 +29,20 @@ export default {
     },
     methods: {
         login () {
-            this.$http.post('/login', this.loginForm)
-                .then(function ( response ) {
-
-                })
+            if (this.validated) {
+                this.$http.post('/api/login', this.loginForm)
+                    .then(function ( response ) {
+                        if (response.data.success == true) {
+                            this.$dispatch('logged-in')
+                        }
+                    })
+            }
+        }
+    },
+    computed: {
+        validated () {
+            return this.loginForm.email != ''
+                    && this.loginForm.password != '';
         }
     }
 }

@@ -7,6 +7,8 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Http\Request;
+use Auth;
 
 class AuthController extends Controller
 {
@@ -40,6 +42,27 @@ class AuthController extends Controller
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
     }
 
+    public function ajaxRegister(Request $request)
+    {
+        $user = $this->create($request->all());
+
+        if ($user) {
+            Auth::loginUsingId($user->id);
+
+            return [
+                'success' => true,
+                'data' => [ 'user' => Auth::user() ],
+                'check' => Auth::check(),
+                'error' => null
+            ];
+        }
+        return [
+            'success' => false,
+            'data' => null,
+            'error' => null
+        ];
+    }
+
     public function ajaxLogin(Request $request)
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], true, true)) {
@@ -56,7 +79,6 @@ class AuthController extends Controller
             'error' => null
         ];
     }
-    
     /**
      * Get a validator for an incoming registration request.
      *
