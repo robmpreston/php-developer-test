@@ -7,6 +7,7 @@ import Home from './vue/components/Home.vue'
 import Signup from './vue/components/Signup.vue'
 import Login from './vue/components/Login.vue'
 import People from './vue/components/People.vue'
+import Tree from './vue/components/Tree.vue'
 
 Vue.use(VueResource)
 Vue.use(VueRouter)
@@ -28,6 +29,9 @@ router.map({
     },
     '/people': {
         component: People
+    },
+    '/:personId': {
+        component: Tree
     }
 })
 

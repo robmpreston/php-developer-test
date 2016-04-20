@@ -14615,6 +14615,10 @@ var _People = require('./vue/components/People.vue');
 
 var _People2 = _interopRequireDefault(_People);
 
+var _Tree = require('./vue/components/Tree.vue');
+
+var _Tree2 = _interopRequireDefault(_Tree);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _vue2.default.use(_vueResource2.default);
@@ -14637,6 +14641,9 @@ router.map({
     },
     '/people': {
         component: _People2.default
+    },
+    '/:personId': {
+        component: _Tree2.default
     }
 });
 
@@ -14648,7 +14655,7 @@ router.start(_App2.default, '#app');
 
 _vue2.default.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#_token').getAttribute('value');
 
-},{"./vue/components/App.vue":31,"./vue/components/Home.vue":32,"./vue/components/Login.vue":33,"./vue/components/People.vue":34,"./vue/components/Signup.vue":37,"vue":28,"vue-resource":16,"vue-router":27}],31:[function(require,module,exports){
+},{"./vue/components/App.vue":31,"./vue/components/Home.vue":32,"./vue/components/Login.vue":33,"./vue/components/People.vue":34,"./vue/components/Signup.vue":37,"./vue/components/Tree.vue":38,"vue":28,"vue-resource":16,"vue-router":27}],31:[function(require,module,exports){
 var __vueify_style__ = require("vueify-insert-css").insert("/* line 4, stdin */\n.navbar .nav li {\n  cursor: pointer; }\n")
 'use strict';
 
@@ -14903,7 +14910,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../shared/Modal.vue":38,"vue":28,"vue-hot-reload-api":2}],36:[function(require,module,exports){
+},{"../shared/Modal.vue":39,"vue":28,"vue-hot-reload-api":2}],36:[function(require,module,exports){
 'use strict';
 
 var _Modal = require('../shared/Modal.vue');
@@ -14952,7 +14959,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../shared/Modal.vue":38,"vue":28,"vue-hot-reload-api":2}],37:[function(require,module,exports){
+},{"../shared/Modal.vue":39,"vue":28,"vue-hot-reload-api":2}],37:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -15001,6 +15008,46 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":2}],38:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    props: ['context'],
+    data: function data() {
+        return {
+            tree: {},
+            personId: 0
+        };
+    },
+    created: function created() {
+        this.personId = this.$route.params.personId;
+        this.get();
+    },
+
+    methods: {
+        get: function get() {
+            this.$http.get('/api/people/tree/' + this.personId).then(function (response) {
+                this.tree = response.data;
+            });
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div v-show=\"context.loggedIn\">\n</div>\n<div v-show=\"!context.loggedIn\">\n    <p>You must be logged in to view this page</p>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  var id = "/home/owner/Documents/source/php-developer-test/resources/assets/js/vue/components/Tree.vue"
+  if (!module.hot.data) {
+    hotAPI.createRecord(id, module.exports)
+  } else {
+    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":28,"vue-hot-reload-api":2}],39:[function(require,module,exports){
 'use strict';
 
 module.exports = {

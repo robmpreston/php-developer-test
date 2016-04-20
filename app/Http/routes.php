@@ -15,6 +15,7 @@ Route::group(['middleware' => ['web', 'auth']], function() {
 
     Route::get('/api/people', 'PeopleController@all');
     Route::get('/api/people/{id}', 'PeopleController@get');
+    Route::get('/api/people/tree/{id}', 'PeopleController@getTree');
     Route::post('/api/people/add', 'PeopleController@add');
     Route::post('/api/people/update/{id}', 'PeopleController@update');
 

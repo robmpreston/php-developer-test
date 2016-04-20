@@ -20,6 +20,11 @@ class PeopleController extends Controller
         return response()->json(Person::with('relation')->find($id));
     }
 
+    public function getTree($id)
+    {
+        return response()->json(['yo' => 'yo']);
+    }
+
     public function add(Request $request)
     {
         $person = Person::createWithRelation($request->all());

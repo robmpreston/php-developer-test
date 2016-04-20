@@ -48,7 +48,7 @@ export default {
     computed: {
         validated () {
             return this.signupForm.name != '' && this.signupForm.email != ''
-                    && this.signupForm.password != '';
+                    && this.signupForm.password != ''
         }
     }
 }
