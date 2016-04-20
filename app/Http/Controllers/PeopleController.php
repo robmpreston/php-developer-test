@@ -28,7 +28,7 @@ class PeopleController extends Controller
     public function add(Request $request)
     {
         $person = Person::createWithRelation($request->all());
-    //    $this->dispatch(new PostSlack($person));
+        $this->dispatch(new PostSlack($person));
         return response()->json($person);
     }
 
