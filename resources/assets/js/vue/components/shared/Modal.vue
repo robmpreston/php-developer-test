@@ -11,15 +11,15 @@ module.exports = {
     props: ['show', 'onClose'],
     methods: {
         close: function () {
-            this.onClose();
+            this.onClose()
         }
     },
     ready: function () {
         document.addEventListener("keydown", function (e) {
             if (this.show && e.keyCode == 27) {
-                this.onClose();
+                this.onClose()
             }
-        });
+        })
     }
-};
+}
 </script>

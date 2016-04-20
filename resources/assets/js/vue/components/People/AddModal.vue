@@ -86,7 +86,7 @@ module.exports = {
             }
         },
         add () {
-            let self = this;
+            let self = this
             this.$http.post('/api/people/add', this.addForm)
                 .then( function(response) {
                     self.$dispatch('update-people')

@@ -32,6 +32,13 @@ class Person extends Model {
 		 $person->relation()->save($relation);
 		 $person->save();
 
+	 	 // Update the spouse to have this person as their spouse as well
+		 if ($person->relation->spouse != null) {
+		     $spouse = $person->relation->spouse;
+			 $spouse->relation->spouse_id = $person->id;
+			 $spouse->relation->save();
+		 }
+
 		 return $person;
 	}
 
@@ -43,6 +50,13 @@ class Person extends Model {
 		$relation = $this->relation;
 		$relation->update($input['relation']);
 		$relation->save();
+
+		// Update the spouse to have this person as their spouse as well
+		if ($this->relation->spouse != null) {
+			$spouse = $this->relation->spouse;
+			$spouse->relation->spouse_id = $this->id;
+			$spouse->relation->save();
+		}
 
 		return $this;
 	}

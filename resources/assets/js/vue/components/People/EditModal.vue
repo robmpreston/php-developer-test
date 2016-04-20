@@ -72,7 +72,7 @@ module.exports = {
             this.body = ''
         },
         update () {
-            let self = this;
+            let self = this
             this.$http.post('/api/people/update/' + this.person.id, this.person)
                 .then( function(response) {
                     self.$dispatch('update-people')

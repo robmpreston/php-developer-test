@@ -31,7 +31,7 @@ export default {
     },
     methods: {
         getContext() {
-            var self = this;
+            var self = this
             this.$http.get('/api/context').then(function (response) {
                 self.context = response.data
             })

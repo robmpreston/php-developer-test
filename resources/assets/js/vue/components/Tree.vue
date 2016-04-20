@@ -1,6 +1,6 @@
 <template>
     <div v-show="context.loggedIn">
-        <p>{{ tree | json }}</p>
+        <
     </div>
     <div v-show="!context.loggedIn">
         <p>You must be logged in to view this page</p>

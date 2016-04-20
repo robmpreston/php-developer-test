@@ -72,6 +72,9 @@ export default {
         edit (person) {
             this.editData = person
             this.showEdit = true
+        },
+        view (person) {
+            this.$route.router.go({ path: '/' + person.id })
         }
     },
     events: {
