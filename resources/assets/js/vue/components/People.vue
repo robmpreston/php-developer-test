@@ -19,6 +19,7 @@
                         <td>
                             <a @click="edit(person)">Edit</a>
                             <a @click="view(person)">View</a>
+                            <a @click="remove(person)">Remove</a>
                         </td>
                     </tr>
                 </table>
@@ -60,6 +61,13 @@ export default {
         },
         add () {
             this.showAdd = true
+        },
+        remove (person) {
+            let self = this
+            this.$http.get('/api/people/remove/' + person.id)
+                        .then(function (response) {
+                            self.update()
+                        })
         },
         edit (person) {
             this.editData = person

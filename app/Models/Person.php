@@ -21,7 +21,7 @@ class Person extends Model {
 	{
 		return $this->hasOne('App\Models\Relation');
 	}
-	
+
 	public static function createWithRelation($input)
 	{
 		 $person = Person::create($input);
@@ -45,5 +45,31 @@ class Person extends Model {
 		$relation->save();
 
 		return $this;
+	}
+
+	public function buildTree($getSpouse = true)
+	{
+		$tree = [
+			'name' => $this->getName()
+		];
+
+		if ($this->relation->father != null) {
+			$tree['father'] = $this->relation->father->buildTree();
+		}
+
+		if ($this->relation->mother != null) {
+			$tree['mother'] = $this->relation->mother->buildTree(false);
+		}
+
+		if ($getSpouse && $this->relation->spouse != null) {
+			$tree['spouse'] = $this->relation->spouse->buildTree(false);
+		}
+
+		return $tree;
+	}
+
+	private function getName()
+	{
+		return $this->first_name . ' ' . $this->last_name;
 	}
 }

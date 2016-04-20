@@ -14823,6 +14823,12 @@ exports.default = {
         add: function add() {
             this.showAdd = true;
         },
+        remove: function remove(person) {
+            var self = this;
+            this.$http.get('/api/people/remove/' + person.id).then(function (response) {
+                self.update();
+            });
+        },
         edit: function edit(person) {
             this.editData = person;
             this.showEdit = true;
@@ -14835,7 +14841,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div v-show=\"context.loggedIn\">\n    <add-modal :show.sync=\"showAdd\" :people=\"people\"></add-modal>\n    <edit-modal :show.sync=\"showEdit\" :people=\"people\" :person=\"editData\"></edit-modal>\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <button @click=\"add\" class=\"btn btn-primary\">Add Person</button>\n        </div>\n    </div>\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <table class=\"table\">\n                <tbody><tr>\n                    <th>Person</th>\n                    <th>Actions</th>\n                </tr>\n                <tr v-for=\"person in people\">\n                    <td>{{ person.first_name }} {{ person.last_name }}</td>\n                    <td>\n                        <a @click=\"edit(person)\">Edit</a>\n                        <a @click=\"view(person)\">View</a>\n                    </td>\n                </tr>\n            </tbody></table>\n        </div>\n    </div>\n</div>\n<div v-show=\"!context.loggedIn\">\n    <p>You must be logged in to view this page</p>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div v-show=\"context.loggedIn\">\n    <add-modal :show.sync=\"showAdd\" :people=\"people\"></add-modal>\n    <edit-modal :show.sync=\"showEdit\" :people=\"people\" :person=\"editData\"></edit-modal>\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <button @click=\"add\" class=\"btn btn-primary\">Add Person</button>\n        </div>\n    </div>\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <table class=\"table\">\n                <tbody><tr>\n                    <th>Person</th>\n                    <th>Actions</th>\n                </tr>\n                <tr v-for=\"person in people\">\n                    <td>{{ person.first_name }} {{ person.last_name }}</td>\n                    <td>\n                        <a @click=\"edit(person)\">Edit</a>\n                        <a @click=\"view(person)\">View</a>\n                        <a @click=\"remove(person)\">Remove</a>\n                    </td>\n                </tr>\n            </tbody></table>\n        </div>\n    </div>\n</div>\n<div v-show=\"!context.loggedIn\">\n    <p>You must be logged in to view this page</p>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -15035,7 +15041,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div v-show=\"context.loggedIn\">\n</div>\n<div v-show=\"!context.loggedIn\">\n    <p>You must be logged in to view this page</p>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div v-show=\"context.loggedIn\">\n    <p>{{ tree | json }}</p>\n</div>\n<div v-show=\"!context.loggedIn\">\n    <p>You must be logged in to view this page</p>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

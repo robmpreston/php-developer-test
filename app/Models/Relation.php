@@ -11,7 +11,7 @@ class Relation extends Model {
 	public $timestamps = false;
 
 	use SoftDeletes;
-	protected $visible = ['father_id', 'mother_id', 'spouse_id'];
+	protected $visible = ['father_id', 'mother_id', 'spouse_id', 'father', 'mother', 'spouse'];
 	protected $fillable = [ 'father_id', 'mother_id', 'spouse_id' ];
 	protected $dates = ['deleted_at'];
 	protected $guarded = [ 'id' ];
