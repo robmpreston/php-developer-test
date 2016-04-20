@@ -1,8 +1,8 @@
 <template>
     <modal :show.sync="show" :on-close="close">
         <div class="modal-header">
-            <h1>Add New Person</h1>
-            <div class="close-modal flex-right">X</div>
+            <p>Add New Person</p>
+            <div class="close-modal pull-right" @click="close">X</div>
         </div>
 
         <div class="modal-body">
@@ -41,16 +41,12 @@
                             </option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <button class="btn btn-primary"
-                                @click="add">Add</button>
-                    </div>
                 </div>
             </div>
         </div>
 
         <div class="modal-footer text-right">
-            <button class="btn btn-primary">Add</button>
+            <button class="btn btn-primary" @click="add">Add</button>
         </div>
     </modal>
 </template>
@@ -62,7 +58,7 @@ module.exports = {
     components: {
         'modal': Modal
     },
-    props: [ 'show' ],
+    props: [ 'show', 'people' ],
     data () {
         return {
             title: '',
@@ -79,15 +75,22 @@ module.exports = {
     methods: {
         close () {
             this.show = false
-            this.title = '';
-            this.body = '';
+            this.title = ''
+            this.body = ''
+            this.addForm = {
+                first_name: '',
+                last_name: '',
+                mother_id: '0',
+                father_id: '0',
+                spouse_id: '0'
+            }
         },
         add () {
             let self = this;
             this.$http.post('/api/people/add', this.addForm)
                 .then( function(response) {
-                    self.update()
-                    this.$dispatch('update-people')
+                    self.$dispatch('update-people')
+                    self.close()
                 })
         },
     }

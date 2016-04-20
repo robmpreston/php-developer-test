@@ -14,7 +14,7 @@
         </div>
     </nav>
     <div class="container">
-        <router-view></router-view>
+        <router-view :context="context"></router-view>
     </div>
 </div>
 </template>
@@ -27,7 +27,7 @@ export default {
         }
     },
     created () {
-        this.getContext();
+        this.getContext()
     },
     methods: {
         getContext() {
@@ -39,15 +39,15 @@ export default {
         logout() {
             this.$http.get('/api/logout')
                 .then(function(response) {
-                    this.getContext();
-                    this.$route.router.go({ path: '/' });
+                    this.getContext()
+                    this.$route.router.go({ path: '/' })
                 })
         }
     },
     events: {
         'logged-in': function () {
-            this.getContext();
-            this.$route.router.go({ path: '/people' });
+            this.getContext()
+            this.$route.router.go({ path: '/people' })
         }
     }
 }

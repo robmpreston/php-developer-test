@@ -14,12 +14,12 @@
 Route::group(['middleware' => ['web', 'auth']], function() {
 
     Route::get('/api/people', 'PeopleController@all');
-    Route::post('/api/people/add', 'PeopleController@add');
     Route::get('/api/people/{id}', 'PeopleController@get');
+    Route::post('/api/people/add', 'PeopleController@add');
+    Route::post('/api/people/update/{id}', 'PeopleController@update');
 
     Route::get('/api/logout', function() {
         Auth::logout();
-
         return response()->json([ 'success' => true ]);
     });
 });

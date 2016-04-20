@@ -19,6 +19,7 @@
 
 <script>
 export default {
+    props: [ 'context' ],
     data() {
         return {
             loginForm: {
@@ -42,7 +43,7 @@ export default {
     computed: {
         validated () {
             return this.loginForm.email != ''
-                    && this.loginForm.password != '';
+                    && this.loginForm.password != ''
         }
     }
 }

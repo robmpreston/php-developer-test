@@ -1,8 +1,8 @@
 <template>
     <modal :show.sync="show" :on-close="close">
         <div class="modal-header">
-            <h1>Add New Person</h1>
-            <div class="close-modal flex-right">X</div>
+            <p>Edit {{ person.first_name }} {{ person.last_name }}</p>
+            <div class="close-modal pull-right" @click="close">X</div>
         </div>
 
         <div class="modal-body">
@@ -10,47 +10,43 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <input class="form-control" type="text"
-                               placeholder="First name" v-model="addForm.first_name">
+                               placeholder="First name" v-model="person.first_name">
                     </div>
                     <div class="form-group">
                         <input class="form-control" type="text"
-                               placeholder="Last name" v-model="addForm.last_name">
+                               placeholder="Last name" v-model="person.last_name">
                     </div>
 
                     <div class="form-group">
-                        <select class="form-control" v-model="addForm.mother_id">
+                        <select class="form-control" v-model="person.relation.mother_id">
                             <option value="0">Select Mother</option>
-                            <option v-for="person in people" :value="person.id">
-                                {{ person.first_name }} {{ person.last_name }}
+                            <option v-for="p in people" :value="p.id">
+                                {{ p.first_name }} {{ p.last_name }}
                             </option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <select class="form-control" v-model="addForm.father_id">
+                        <select class="form-control" v-model="person.relation.father_id">
                             <option value="0">Select Father</option>
-                            <option v-for="person in people" :value="person.id">
-                                {{ person.first_name }} {{ person.last_name }}
+                            <option v-for="p in people" :value="p.id">
+                                {{ p.first_name }} {{ p.last_name }}
                             </option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <select class="form-control" v-model="addForm.spouse_id">
+                        <select class="form-control" v-model="person.relation.spouse_id">
                             <option value="0">Select Spouse</option>
-                            <option v-for="person in people" :value="person.id">
-                                {{ person.first_name }} {{ person.last_name }}
+                            <option v-for="p in people" :value="p.id">
+                                {{ p.first_name }} {{ p.last_name }}
                             </option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-primary"
-                                @click="add">Add</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="modal-footer text-right">
-            <button class="btn btn-primary">Add</button>
+            <button class="btn btn-primary" @click="update">Update</button>
         </div>
     </modal>
 </template>
@@ -62,32 +58,25 @@ module.exports = {
     components: {
         'modal': Modal
     },
-    props: [ 'show' ],
+    props: [ 'show', 'person', 'people' ],
     data () {
         return {
             title: '',
-            body: '',
-            addForm: {
-                first_name: '',
-                last_name: '',
-                mother_id: '0',
-                father_id: '0',
-                spouse_id: '0'
-            },
+            body: ''
         }
     },
     methods: {
         close () {
             this.show = false
-            this.title = '';
-            this.body = '';
+            this.title = ''
+            this.body = ''
         },
-        add () {
+        update () {
             let self = this;
-            this.$http.post('/api/people/add', this.addForm)
+            this.$http.post('/api/people/update/' + this.person.id, this.person)
                 .then( function(response) {
-                    self.update()
-                    this.$dispatch('update-people')
+                    self.$dispatch('update-people')
+                    self.close()
                 })
         },
     }

@@ -21,22 +21,29 @@ class Person extends Model {
 	{
 		return $this->hasOne('App\Models\Relation');
 	}
-
+	
 	public static function createWithRelation($input)
 	{
-		 $person = Person::create([
-			 'first_name' => $input['first_name'],
-			 'last_name' => $input['last_name']
-		 ]);
+		 $person = Person::create($input);
 
 		 $relation = new Relation;
-		 $relation->father_id = $input['father_id'];
-		 $relation->mother_id = $input['mother_id'];
-		 $relation->spouse_id = $input['spouse_id'];
+		 $relation->fill($input);
 
 		 $person->relation()->save($relation);
 		 $person->save();
 
-		 dd($person);
+		 return $person;
+	}
+
+	public function updateWithRelation($input)
+	{
+		$this->update($input);
+		$this->save();
+
+		$relation = $this->relation;
+		$relation->update($input['relation']);
+		$relation->save();
+
+		return $this;
 	}
 }

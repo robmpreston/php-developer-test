@@ -23,6 +23,7 @@
 
 <script>
 export default {
+    props: [ 'context' ],
     data() {
         return {
             signupForm: {
