@@ -14,7 +14,6 @@ class ContextController extends Controller
         $loggedIn = Auth::check();
 
         $user = null;
-
         if ($loggedIn) {
             $user = Auth::user();
         }

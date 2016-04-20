@@ -39,6 +39,6 @@ class PostSlack extends Job implements ShouldQueue
         ];
 
         $client = new Client(env('SLACK_WEBHOOK'), $settings);
-        $client->send('New person added to Family Tree, name is ' . $this->person->first_name . ' ' . $this->person->last_name);
+        $client->send('New person added to Family Tree, name is ' . $this->person->name);
     }
 }

@@ -19,11 +19,7 @@ Route::group(['middleware' => ['web', 'auth']], function() {
     Route::post('/api/people/add', 'PeopleController@add');
     Route::get('/api/people/remove/{id}', 'PeopleController@remove');
     Route::post('/api/people/update/{id}', 'PeopleController@update');
-
-    Route::get('/api/logout', function() {
-        Auth::logout();
-        return response()->json([ 'success' => true ]);
-    });
+    Route::get('/api/logout', 'Auth\AuthController@logout');
 });
 
 Route::group(['middleware' => 'web'], function() {

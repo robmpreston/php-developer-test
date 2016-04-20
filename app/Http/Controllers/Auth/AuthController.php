@@ -63,6 +63,12 @@ class AuthController extends Controller
         ];
     }
 
+    public function logout()
+    {
+        Auth::logout();
+        return response()->json([ 'success' => true ]);
+    }
+
     public function ajaxLogin(Request $request)
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], true, true)) {
