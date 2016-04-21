@@ -15044,7 +15044,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div v-show=\"context.loggedIn\">\n    <p>{{ tree | json }}</p>\n</div>\n<div v-show=\"!context.loggedIn\">\n    <p>You must be logged in to view this page</p>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div v-show=\"context.loggedIn\">\n    {{{ tree }}} \n</div>\n<div v-show=\"!context.loggedIn\">\n    <p>You must be logged in to view this page</p>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

@@ -66,24 +66,25 @@ class Person extends Model {
 		return $this;
 	}
 
-	public function buildTree($getSpouse = true)
+	public function buildTree($getSpouse = true, $prefix = '')
 	{
-		$tree = [
-			'name' => $this->name
-		];
+		//$tree = [
+		//	'name' => $this->name
+		//];
+		$treeHtml = '<ul><li>' . $prefix . $this->name . '</li>';
 
 		if ($this->relation->father != null) {
-			$tree['father'] = $this->relation->father->buildTree();
+	 		$treeHtml .= $this->relation->father->buildTree(true, 'Father: ');
 		}
 
 		if ($this->relation->mother != null) {
-			$tree['mother'] = $this->relation->mother->buildTree(false);
+			$treeHtml .= $this->relation->mother->buildTree(false, 'Mother: ');
 		}
 
 		if ($getSpouse && $this->relation->spouse != null) {
-			$tree['spouse'] = $this->relation->spouse->buildTree(false);
+			$treeHtml .= $this->relation->spouse->buildTree(false, 'Spouse: ');
 		}
-
-		return $tree;
+		$treeHtml .= '</ul>';
+		return $treeHtml;
 	}
 }
