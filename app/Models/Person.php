@@ -68,9 +68,6 @@ class Person extends Model {
 
 	public function buildTree($getSpouse = true, $prefix = '')
 	{
-		//$tree = [
-		//	'name' => $this->name
-		//];
 		$treeHtml = '<ul><li>' . $prefix . $this->name . '</li>';
 
 		if ($this->relation->father != null) {

@@ -46,7 +46,7 @@
         </div>
 
         <div class="modal-footer text-right">
-            <button class="btn btn-primary" @click="add">Add</button>
+            <button class="btn btn-primary" :disabled="!validated" @click="add">Add</button>
         </div>
     </modal>
 </template>
@@ -93,6 +93,12 @@ module.exports = {
                     self.close()
                 })
         },
+    },
+    computed: {
+        validated () {
+            return this.addForm.first_name != ''
+                    && this.addForm.last_name != ''
+        }
     }
 }
 </script>

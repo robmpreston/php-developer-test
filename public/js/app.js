@@ -14744,7 +14744,8 @@ exports.default = {
         return {
             loginForm: {
                 email: '',
-                password: ''
+                password: '',
+                errorText: ''
             }
         };
     },
@@ -14752,9 +14753,12 @@ exports.default = {
     methods: {
         login: function login() {
             if (this.validated) {
+                this.errorText = '';
                 this.$http.post('/api/login', this.loginForm).then(function (response) {
                     if (response.data.success == true) {
                         this.$dispatch('logged-in');
+                    } else {
+                        this.errorText = "Email and/or password was incorrect";
                     }
                 });
             }
@@ -14767,7 +14771,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"row\">\n    <div class=\"col-md-4 col-md-offset-4\">\n        <div class=\"form-group\">\n            <input class=\"form-control\" type=\"text\" placeholder=\"Email Address\" v-model=\"loginForm.email\">\n        </div>\n        <div class=\"form-group\">\n            <input class=\"form-control\" type=\"password\" placeholder=\"Password\" v-model=\"loginForm.password\">\n        </div>\n        <div class=\"form-group\">\n            <button class=\"btn btn-primary\" @click=\"login\">Login</button>\n        </div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"row\">\n    <div class=\"col-md-4 col-md-offset-4\">\n        <div class=\"form-group\">\n            <input class=\"form-control\" type=\"text\" placeholder=\"Email Address\" v-model=\"loginForm.email\">\n        </div>\n        <div class=\"form-group\">\n            <input class=\"form-control\" type=\"password\" placeholder=\"Password\" v-model=\"loginForm.password\">\n        </div>\n        <div class=\"form-group has-warning\" v-if=\"errorText != ''\">\n            <p>{{ errorText }}</p>\n        </div>\n        <div class=\"form-group\">\n            <button class=\"btn btn-primary\" @click=\"login\">Login</button>\n        </div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -14904,10 +14908,15 @@ module.exports = {
                 self.close();
             });
         }
+    },
+    computed: {
+        validated: function validated() {
+            return this.addForm.first_name != '' && this.addForm.last_name != '';
+        }
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<modal :show.sync=\"show\" :on-close=\"close\">\n    <div class=\"modal-header\">\n        <p>Add New Person</p>\n        <div class=\"close-modal pull-right\" @click=\"close\">X</div>\n    </div>\n\n    <div class=\"modal-body\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <div class=\"form-group\">\n                    <input class=\"form-control\" type=\"text\" placeholder=\"First name\" v-model=\"addForm.first_name\">\n                </div>\n                <div class=\"form-group\">\n                    <input class=\"form-control\" type=\"text\" placeholder=\"Last name\" v-model=\"addForm.last_name\">\n                </div>\n\n                <div class=\"form-group\">\n                    <select class=\"form-control\" v-model=\"addForm.mother_id\">\n                        <option value=\"0\">Select Mother</option>\n                        <option v-for=\"person in people\" :value=\"person.id\">\n                            {{ person.first_name }} {{ person.last_name }}\n                        </option>\n                    </select>\n                </div>\n                <div class=\"form-group\">\n                    <select class=\"form-control\" v-model=\"addForm.father_id\">\n                        <option value=\"0\">Select Father</option>\n                        <option v-for=\"person in people\" :value=\"person.id\">\n                            {{ person.first_name }} {{ person.last_name }}\n                        </option>\n                    </select>\n                </div>\n                <div class=\"form-group\">\n                    <select class=\"form-control\" v-model=\"addForm.spouse_id\">\n                        <option value=\"0\">Select Spouse</option>\n                        <option v-for=\"person in people\" :value=\"person.id\">\n                            {{ person.first_name }} {{ person.last_name }}\n                        </option>\n                    </select>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"modal-footer text-right\">\n        <button class=\"btn btn-primary\" @click=\"add\">Add</button>\n    </div>\n</modal>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<modal :show.sync=\"show\" :on-close=\"close\">\n    <div class=\"modal-header\">\n        <p>Add New Person</p>\n        <div class=\"close-modal pull-right\" @click=\"close\">X</div>\n    </div>\n\n    <div class=\"modal-body\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <div class=\"form-group\">\n                    <input class=\"form-control\" type=\"text\" placeholder=\"First name\" v-model=\"addForm.first_name\">\n                </div>\n                <div class=\"form-group\">\n                    <input class=\"form-control\" type=\"text\" placeholder=\"Last name\" v-model=\"addForm.last_name\">\n                </div>\n\n                <div class=\"form-group\">\n                    <select class=\"form-control\" v-model=\"addForm.mother_id\">\n                        <option value=\"0\">Select Mother</option>\n                        <option v-for=\"person in people\" :value=\"person.id\">\n                            {{ person.first_name }} {{ person.last_name }}\n                        </option>\n                    </select>\n                </div>\n                <div class=\"form-group\">\n                    <select class=\"form-control\" v-model=\"addForm.father_id\">\n                        <option value=\"0\">Select Father</option>\n                        <option v-for=\"person in people\" :value=\"person.id\">\n                            {{ person.first_name }} {{ person.last_name }}\n                        </option>\n                    </select>\n                </div>\n                <div class=\"form-group\">\n                    <select class=\"form-control\" v-model=\"addForm.spouse_id\">\n                        <option value=\"0\">Select Spouse</option>\n                        <option v-for=\"person in people\" :value=\"person.id\">\n                            {{ person.first_name }} {{ person.last_name }}\n                        </option>\n                    </select>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"modal-footer text-right\">\n        <button class=\"btn btn-primary\" :disabled=\"!validated\" @click=\"add\">Add</button>\n    </div>\n</modal>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -14953,10 +14962,15 @@ module.exports = {
                 self.close();
             });
         }
+    },
+    computed: {
+        validated: function validated() {
+            return this.person.first_name != '' && this.person.last_name != '';
+        }
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<modal :show.sync=\"show\" :on-close=\"close\">\n    <div class=\"modal-header\">\n        <p>Edit {{ person.first_name }} {{ person.last_name }}</p>\n        <div class=\"close-modal pull-right\" @click=\"close\">X</div>\n    </div>\n\n    <div class=\"modal-body\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <div class=\"form-group\">\n                    <input class=\"form-control\" type=\"text\" placeholder=\"First name\" v-model=\"person.first_name\">\n                </div>\n                <div class=\"form-group\">\n                    <input class=\"form-control\" type=\"text\" placeholder=\"Last name\" v-model=\"person.last_name\">\n                </div>\n\n                <div class=\"form-group\">\n                    <select class=\"form-control\" v-model=\"person.relation.mother_id\">\n                        <option value=\"0\">Select Mother</option>\n                        <option v-for=\"p in people\" :value=\"p.id\">\n                            {{ p.first_name }} {{ p.last_name }}\n                        </option>\n                    </select>\n                </div>\n                <div class=\"form-group\">\n                    <select class=\"form-control\" v-model=\"person.relation.father_id\">\n                        <option value=\"0\">Select Father</option>\n                        <option v-for=\"p in people\" :value=\"p.id\">\n                            {{ p.first_name }} {{ p.last_name }}\n                        </option>\n                    </select>\n                </div>\n                <div class=\"form-group\">\n                    <select class=\"form-control\" v-model=\"person.relation.spouse_id\">\n                        <option value=\"0\">Select Spouse</option>\n                        <option v-for=\"p in people\" :value=\"p.id\">\n                            {{ p.first_name }} {{ p.last_name }}\n                        </option>\n                    </select>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"modal-footer text-right\">\n        <button class=\"btn btn-primary\" @click=\"update\">Update</button>\n    </div>\n</modal>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<modal :show.sync=\"show\" :on-close=\"close\">\n    <div class=\"modal-header\">\n        <p>Edit {{ person.first_name }} {{ person.last_name }}</p>\n        <div class=\"close-modal pull-right\" @click=\"close\">X</div>\n    </div>\n\n    <div class=\"modal-body\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <div class=\"form-group\">\n                    <input class=\"form-control\" type=\"text\" placeholder=\"First name\" v-model=\"person.first_name\">\n                </div>\n                <div class=\"form-group\">\n                    <input class=\"form-control\" type=\"text\" placeholder=\"Last name\" v-model=\"person.last_name\">\n                </div>\n\n                <div class=\"form-group\" v-if=\"person.relation != null\">\n                    <select class=\"form-control\" v-model=\"person.relation.mother_id\">\n                        <option value=\"0\">Select Mother</option>\n                        <option v-for=\"p in people\" :value=\"p.id\">\n                            {{ p.first_name }} {{ p.last_name }}\n                        </option>\n                    </select>\n                </div>\n                <div class=\"form-group\" v-if=\"person.relation != null\">\n                    <select class=\"form-control\" v-model=\"person.relation.father_id\">\n                        <option value=\"0\">Select Father</option>\n                        <option v-for=\"p in people\" :value=\"p.id\">\n                            {{ p.first_name }} {{ p.last_name }}\n                        </option>\n                    </select>\n                </div>\n                <div class=\"form-group\" v-if=\"person.relation != null\">\n                    <select class=\"form-control\" v-model=\"person.relation.spouse_id\">\n                        <option value=\"0\">Select Spouse</option>\n                        <option v-for=\"p in people\" :value=\"p.id\">\n                            {{ p.first_name }} {{ p.last_name }}\n                        </option>\n                    </select>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"modal-footer text-right\">\n        <button class=\"btn btn-primary\" :disabled=\"!validated\" @click=\"update\">Update</button>\n    </div>\n</modal>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

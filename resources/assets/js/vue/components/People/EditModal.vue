@@ -17,7 +17,7 @@
                                placeholder="Last name" v-model="person.last_name">
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" v-if="person.relation != null">
                         <select class="form-control" v-model="person.relation.mother_id">
                             <option value="0">Select Mother</option>
                             <option v-for="p in people" :value="p.id">
@@ -25,7 +25,7 @@
                             </option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" v-if="person.relation != null">
                         <select class="form-control" v-model="person.relation.father_id">
                             <option value="0">Select Father</option>
                             <option v-for="p in people" :value="p.id">
@@ -33,7 +33,7 @@
                             </option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" v-if="person.relation != null">
                         <select class="form-control" v-model="person.relation.spouse_id">
                             <option value="0">Select Spouse</option>
                             <option v-for="p in people" :value="p.id">
@@ -46,7 +46,7 @@
         </div>
 
         <div class="modal-footer text-right">
-            <button class="btn btn-primary" @click="update">Update</button>
+            <button class="btn btn-primary" :disabled="!validated" @click="update">Update</button>
         </div>
     </modal>
 </template>
@@ -79,6 +79,12 @@ module.exports = {
                     self.close()
                 })
         },
+    },
+    computed: {
+        validated () {
+            return this.person.first_name != ''
+                    && this.person.last_name != ''
+        }
     }
 }
 </script>
