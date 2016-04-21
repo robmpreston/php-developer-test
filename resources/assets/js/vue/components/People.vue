@@ -65,9 +65,9 @@ export default {
         remove (person) {
             let self = this
             this.$http.get('/api/people/remove/' + person.id)
-                        .then(function (response) {
-                            self.update()
-                        })
+                .then(function (response) {
+                    self.update()
+                })
         },
         edit (person) {
             this.editData = person
